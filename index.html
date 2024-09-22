@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typesense Search Interface</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="description" content="US Federal Policy Tracker with Hybrid Vector Search">
+  <meta name="keywords" content="US, Federal, Policy, Tracker, Typesense, OpenAI, Search">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="typesense-instantsearch-demo/src/app.css">
+</head>
+<body>
+  <div class="container">
+    <h1>US Federal Policy Tracker</h1>
+    <div class="search-controls">
+      <div id="searchbox"></div>
+    </div>
+    <div class="search-panel">
+      <div class="search-panel__filters">
+        <h2>Filters</h2>
+        <div>
+          <h3>Introduction Date</h3>
+          <div id="intro-date-picker"></div>
+        </div>
+        <div>
+          <h3>Themes</h3>
+          <div id="themes-list"></div>
+        </div>
+        <div>
+          <h3>Entity Type</h3>
+          <div id="entity-type-list"></div>
+        </div>
+        <div>
+          <h3>Status</h3>
+          <div id="status-list"></div>
+        </div>
+      </div>
+      <div class="search-panel__results">
+        <div id="stats"></div>
+        <div id="hits"></div>
+        <div id="pagination"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.46.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="typesense-instantsearch-demo/src/app.js"></script>
+</body>
+</html>
+</html>
