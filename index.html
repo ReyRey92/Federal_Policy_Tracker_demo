@@ -1,98 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typesense Search Interface</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <meta name="description" content="US Federal Policy Tracker with Hybrid Vector Search">
-  <meta name="keywords" content="US, Federal, Policy, Tracker, Typesense, OpenAI, Search">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="typesense-instantsearch-demo/src/app.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Federal Policy Tracker</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta name="description" content="US Federal Policy Tracker with Hybrid Vector Search">
+    <meta name="keywords" content="US, Federal, Policy, Tracker, Typesense, OpenAI, Search">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="typesense-instantsearch-demo/src/app.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .home-button {
+            padding: 8px 16px;
+            background-color: #fe5a00;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .home-button:hover {
+            background-color: #e55100;
+        }
+        .search-panel {
+            display: flex;
+            gap: 20px;
+        }
+        .search-panel__filters {
+            flex: 0 0 250px;
+        }
+        .search-panel__results {
+            flex: 1;
+        }
+        #searchbox {
+            margin-bottom: 20px;
+        }
+        #pagination {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
-  <div class="container">
-    <!-- Flex container to keep title and Home button on the same line -->
-    <div class="header">
-      <h1>US Federal Policy Tracker</h1>
-      <a href="https://chameleon-gar-fr7w.squarespace.com/" class="home-button">Home</a>
+    <div class="container">
+        <div class="header">
+            <h1>US Federal Policy Tracker</h1>
+            <a href="https://chameleon-gar-fr7w.squarespace.com/" class="home-button">Home</a>
+        </div>
+        
+        <div id="searchbox"></div>
+        
+        <div class="search-panel">
+            <div class="search-panel__filters">
+                <h2>Filters</h2>
+                <div>
+                    <h3>Introduction Date</h3>
+                    <div id="intro-date-picker"></div>
+                </div>
+                <div>
+                    <h3>Themes</h3>
+                    <div id="themes-list"></div>
+                </div>
+                <div>
+                    <h3>Entity Type</h3>
+                    <div id="entity-type-list"></div>
+                </div>
+                <div>
+                    <h3>Status</h3>
+                    <div id="status-list"></div>
+                </div>
+            </div>
+            <div class="search-panel__results">
+                <div id="stats"></div>
+                <div id="hits"></div>
+                <div id="pagination"></div>
+            </div>
+        </div>
     </div>
-  
-    <!-- Search controls and other elements below the title -->
-    <div class="search-controls">
-      <div id="searchbox"></div>
-    </div>
-  
-    <div class="search-panel">
-      <div class="search-panel__filters">
-        <h2>Filters</h2>
-        <div>
-          <h3>Introduction Date</h3>
-          <div id="intro-date-picker"></div>
-        </div>
-        <div>
-          <h3>Themes</h3>
-          <div id="themes-list"></div>
-        </div>
-        <div>
-          <h3>Entity Type</h3>
-          <div id="entity-type-list"></div>
-        </div>
-        <div>
-          <h3>Status</h3>
-          <div id="status-list"></div>
-        </div>
-      </div>
-      <div class="search-panel__results">
-        <div id="stats"></div>
-        <div id="hits"></div>
-        <div id="pagination"></div>
-      </div>
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.46.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="typesense-instantsearch-demo/src/app.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.46.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="typesense-instantsearch-demo/src/app.js"></script>
 </body>
-<style>
-  /* Flex container for title and Home button */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px; /* Adjust as needed to add space below title */
-    flex-wrap: nowrap; /* Prevent wrapping onto the next line */
-  }
-
-  /* Ensure title doesn't take full width */
-  .header h1 {
-    flex: 1; /* Allows the title to take up remaining space */
-    margin-right: 10px; /* Add some space between the title and button */
-  }
-
-  /* Lozenge style for Home button */
-  .home-button {
-    padding: 8px 16px;
-    background-color: #fe5a00;
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap; /* Prevents the button text from breaking */
-  }
-
-  .home-button:hover {
-    background-color: #fe5a00;
-  }
-
-  /* Style adjustments for search controls */
-  .search-controls {
-    margin-top: 10px; /* Ensures space between title and search box */
-  }
-</style>
-</html>
 </html>
