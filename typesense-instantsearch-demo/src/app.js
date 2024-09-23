@@ -16,16 +16,6 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
   }
 });
 
-// Override the fetch function for debugging
-const originalFetch = window.fetch;
-window.fetch = function (...args) {
-  console.log('Fetch request:', args);
-  return originalFetch.apply(this, args).then((response) => {
-    console.log('Fetch response:', response);
-    return response;
-  });
-};
-
 // Create the searchClient using Typesense
 const searchClient = typesenseInstantsearchAdapter.searchClient;
 
@@ -38,100 +28,10 @@ function normalizeQuery(query) {
 const searchConfig = {
   vectorWeight: 0.7,
   keywordWeight: 0.3,
-  vectorK: 100,
+  vectorK: 1000, // Will be updated dynamically
   typoTolerance: 2,
   queryBy: ['Name', 'Introduced by', 'Themes', 'Bill Summary', 'embedding'], // Include 'embedding'
 };
-
-// Initialize InstantSearch
-const search = instantsearch({
-  indexName: 'bills_federal',
-  searchClient,
-  searchFunction(helper) {
-    let query = helper.state.query;
-    if (query) {
-      query = normalizeQuery(query);
-      helper.setQueryParameter('q', query);
-      helper.setQueryParameter('query_by', searchConfig.queryBy.join(',')); // Now includes 'embedding'
-      helper.setQueryParameter('hybrid_search', {
-        enabled: true,
-        weight: {
-          vector: searchConfig.vectorWeight,
-          keyword: searchConfig.keywordWeight,
-        },
-      });
-      helper.setQueryParameter('typo_tolerance', {
-        enabled: true,
-        num_typos: searchConfig.typoTolerance,
-      });
-
-    } else {
-      helper.setQueryParameter('vector_query', undefined);
-      helper.setQueryParameter('hybrid_search', undefined);
-    }
-    helper.search();
-  },
-});
-
-// Debug logging for search parameters and results
-search.addWidgets([
-  {
-    render({ results, state }) {
-      console.log('Search query:', state.query);
-      console.log('Search parameters:', {
-        vector_query: state.vector_query,
-        hybrid_search: state.hybrid_search,
-        typo_tolerance: state.typo_tolerance,
-        query_by: state.query_by,
-      });
-      console.log('Total hits:', results.nbHits);
-      console.log('Top 5 hits:', results.hits.slice(0, 5).map((hit) => ({
-        Name: hit.Name,
-        Themes: hit.Themes,
-        Summary: hit.Bill_Summary ? hit.Bill_Summary.slice(0, 100) + '...' : 'N/A',
-      })));
-    },
-  },
-]);
-
-// Custom date range picker widget
-const customDateRangePicker = instantsearch.connectors.connectRange((renderOptions, isFirstRender) => {
-  const { refine, start, currentRefinement } = renderOptions;
-
-  if (isFirstRender) {
-    const container = document.querySelector('#intro-date-picker');
-    container.innerHTML = `
-      <input type="text" id="date-picker-start" placeholder="Start Date" name="start-date">
-      <input type="text" id="date-picker-end" placeholder="End Date" name="end-date">
-    `;
-
-    flatpickr("#date-picker-start", {
-      onChange: (selectedDates) => {
-        if (selectedDates[0]) {
-          refine([Math.floor(selectedDates[0].getTime() / 1000), currentRefinement ? currentRefinement.max : undefined]);
-        }
-      },
-    });
-
-    flatpickr("#date-picker-end", {
-      onChange: (selectedDates) => {
-        if (selectedDates[0]) {
-          refine([currentRefinement ? currentRefinement.min : undefined, Math.floor(selectedDates[0].getTime() / 1000)]);
-        }
-      },
-    });
-  }
-
-  // Update the inputs if the refinement changes
-  if (currentRefinement) {
-    if (currentRefinement.min !== -Infinity) {
-      document.querySelector('#date-picker-start')._flatpickr.setDate(new Date(currentRefinement.min * 1000));
-    }
-    if (currentRefinement.max !== Infinity) {
-      document.querySelector('#date-picker-end')._flatpickr.setDate(new Date(currentRefinement.max * 1000));
-    }
-  }
-});
 
 // Function to calculate the number of hits per page
 function calculateHitsPerPage() {
@@ -153,23 +53,101 @@ function calculateHitsPerPage() {
   return columns * rows;
 }
 
-// Function to update the hits per page dynamically
+// Function to update the hits per page and vectorK dynamically
 function updateHitsPerPage() {
   const hitsPerPage = calculateHitsPerPage();
-  search.setUiState((prevState) => ({
-    ...prevState,
-    bills_federal: { 
-      ...prevState.bills_federal, 
+  const totalPages = 100; // Adjust as needed
+  const vectorK = hitsPerPage * totalPages;
+
+  // Update searchConfig with new vectorK
+  searchConfig.vectorK = vectorK;
+
+  // Update hitsPerPage using the configure widget
+  search.addWidget(
+    instantsearch.widgets.configure({
       hitsPerPage: hitsPerPage,
-    },
-  }));
+    })
+  );
+
+  // Trigger a search to apply the new hitsPerPage and vectorK
+  search.helper.setQueryParameter('hitsPerPage', hitsPerPage).search();
 }
+
+// Initialize InstantSearch
+const search = instantsearch({
+  indexName: 'bills_federal',
+  searchClient,
+  searchFunction(helper) {
+    let query = helper.state.query;
+    const page = helper.getPage();
+    const perPage = helper.state.hitsPerPage || 10;
+    const vectorK = searchConfig.vectorK || perPage * 100; // Default to 100 pages if not set
+
+    if (query) {
+      query = normalizeQuery(query);
+      helper.setQueryParameter('q', query);
+      helper.setQueryParameter('query_by', searchConfig.queryBy.join(','));
+      helper.setQueryParameter('hybrid_search', {
+        enabled: true,
+        weight: {
+          vector: searchConfig.vectorWeight,
+          keyword: searchConfig.keywordWeight,
+        },
+      });
+      helper.setQueryParameter('typo_tolerance', {
+        enabled: true,
+        num_typos: searchConfig.typoTolerance,
+      });
+      // Set the vector_query parameter with the calculated vectorK
+      helper.setQueryParameter('vector_query', `embedding:([], k:${vectorK})`);
+    } else {
+      helper.setQueryParameter('vector_query', undefined);
+      helper.setQueryParameter('hybrid_search', undefined);
+    }
+    helper.setPage(page);
+    helper.search();
+  },
+});
+
+// Custom date range picker widget
+const customDateRangePicker = instantsearch.connectors.connectRange((renderOptions, isFirstRender) => {
+  const { refine, currentRefinement } = renderOptions;
+
+  if (isFirstRender) {
+    const container = document.querySelector('#intro-date-picker');
+    container.innerHTML = `
+      <input type="text" id="date-picker-start" placeholder="Start Date" name="start-date">
+      <input type="text" id="date-picker-end" placeholder="End Date" name="end-date">
+    `;
+
+    flatpickr("#date-picker-start", {
+      onChange: (selectedDates) => {
+        if (selectedDates[0]) {
+          refine([
+            Math.floor(selectedDates[0].getTime() / 1000),
+            currentRefinement ? currentRefinement.max : undefined,
+          ]);
+        }
+      },
+    });
+  }
+
+  // Update the inputs if the refinement changes
+  if (currentRefinement) {
+    if (currentRefinement.min !== -Infinity) {
+      document.querySelector('#date-picker-start')._flatpickr.setDate(new Date(currentRefinement.min * 1000));
+    }
+    if (currentRefinement.max !== Infinity) {
+      document.querySelector('#date-picker-end')._flatpickr.setDate(new Date(currentRefinement.max * 1000));
+    }
+  }
+});
+
 
 // Event listeners to trigger hits update on page load and window resize
 window.addEventListener('resize', updateHitsPerPage);
 window.addEventListener('load', function () {
   setTimeout(updateHitsPerPage, 1000); // Add a slight delay to ensure the hits list is rendered
-  window.addEventListener('resize', updateHitsPerPage);
 });
 
 // Search widgets setup
@@ -185,21 +163,25 @@ search.addWidgets([
       input: 'custom-input-class',
     },
   }),
+  instantsearch.widgets.configure({
+    hitsPerPage: calculateHitsPerPage(),
+  }),
   instantsearch.widgets.hits({
     container: '#hits',
     templates: {
       item(hit) {
-        console.log('Themes:', hit.Themes); // Log the themes for debugging
         const formatDate = (timestamp) => {
           if (typeof timestamp === 'number' && !isNaN(timestamp)) {
             return new Date(timestamp * 1000).toLocaleDateString();
           }
           return 'Invalid Date';
         };
+        const themes = (hit.Themes && Array.isArray(hit.Themes))
+          ? hit.Themes.map((theme) => theme.trim())
+          : [];
 
-        const themes = (hit.Themes && Array.isArray(hit.Themes)) ? hit.Themes.map((theme) => theme.trim()) : [];
 
-    
+
         // Color mapping for themes
         const themeColors = {
           "Algorithmic Fairness and Accountability": { bg: "#e57373", text: "#ffffff" }, // Light red with white text
@@ -261,6 +243,7 @@ search.addWidgets([
   }),
   instantsearch.widgets.pagination({
     container: '#pagination',
+    totalPages: 100, // Set the total number of pages
   }),
   customDateRangePicker({
     container: '#intro-date-picker',
