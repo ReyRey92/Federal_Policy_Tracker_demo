@@ -27,6 +27,22 @@
   color: #e56c10;
 }
 
+  /* Flex container for title and Home button */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Adjust as needed to add space below title */
+  flex-wrap: nowrap; /* Prevent wrapping onto the next line */
+}
+
+
+/* Style adjustments for search controls */
+.search-controls {
+  margin-top: 10px; /* Ensures space between title and search box */
+}
+
+
 /* Filters header */
 .search-panel__filters h2 {
   color: #002c50;
