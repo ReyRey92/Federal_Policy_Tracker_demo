@@ -12,11 +12,19 @@
   <link rel="stylesheet" href="typesense-instantsearch-demo/src/app.css">
 </head>
 <body>
+
   <div class="container">
-    <h1>US Federal Policy Tracker</h1>
+    <!-- Flex container to keep title and Home button on the same line -->
+    <div class="header">
+      <h1>US Federal Policy Tracker</h1>
+      <a href="https://chameleon-gar-fr7w.squarespace.com/" class="home-button">Home</a>
+    </div>
+  
+    <!-- Search controls and other elements below the title -->
     <div class="search-controls">
       <div id="searchbox"></div>
     </div>
+  
     <div class="search-panel">
       <div class="search-panel__filters">
         <h2>Filters</h2>
@@ -49,5 +57,42 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="typesense-instantsearch-demo/src/app.js"></script>
 </body>
+<style>
+  /* Flex container for title and Home button */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Adjust as needed to add space below title */
+    flex-wrap: nowrap; /* Prevent wrapping onto the next line */
+  }
+
+  /* Ensure title doesn't take full width */
+  .header h1 {
+    flex: 1; /* Allows the title to take up remaining space */
+    margin-right: 10px; /* Add some space between the title and button */
+  }
+
+  /* Lozenge style for Home button */
+  .home-button {
+    padding: 8px 16px;
+    background-color: #fe5a00;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap; /* Prevents the button text from breaking */
+  }
+
+  .home-button:hover {
+    background-color: #fe5a00;
+  }
+
+  /* Style adjustments for search controls */
+  .search-controls {
+    margin-top: 10px; /* Ensures space between title and search box */
+  }
+</style>
 </html>
 </html>
