@@ -268,6 +268,15 @@ search.addWidgets([
     min: 1546300800, // Jan 1, 2019 (adjust as needed)
     max: Math.floor(Date.now() / 1000), // Current timestamp
   }),
+    instantsearch.widgets.refinementList({
+    container: '#themes-list',
+    attribute: 'Themes',
+    searchable: true,
+    searchablePlaceholder: 'Search themes',
+    showMore: true,
+    limit: 10,
+    showMoreLimit: 20,
+  }),
   instantsearch.widgets.refinementList({
     container: '#entity-type-list',
     attribute: 'Entity Type',
