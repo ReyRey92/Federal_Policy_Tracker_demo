@@ -12,7 +12,7 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     connectionTimeoutSeconds: 10  // Increased from default 5 seconds
   },
   additionalSearchParameters: {
-    query_by: "Name,Introduced by,Themes,Bill Summary"
+    query_by: "Name,Introduced by,Themes,Bill Summary,embedding" // Added 'embedding'
   }
 });
 
@@ -40,20 +40,19 @@ const searchConfig = {
   keywordWeight: 0.3,
   vectorK: 100,
   typoTolerance: 2,
-  queryBy: ['Name', 'Introduced by', 'Themes', 'Bill Summary'],
+  queryBy: ['Name', 'Introduced by', 'Themes', 'Bill Summary', 'embedding'], // Include 'embedding'
 };
 
 // Initialize InstantSearch
 const search = instantsearch({
-  indexName: 'bills',
+  indexName: 'bills_federal',
   searchClient,
   searchFunction(helper) {
     let query = helper.state.query;
     if (query) {
       query = normalizeQuery(query);
       helper.setQueryParameter('q', query);
-      helper.setQueryParameter('query_by', searchConfig.queryBy.join(','));
-      helper.setQueryParameter('vector_query', `embedding:([${query}], k:${searchConfig.vectorK})`);
+      helper.setQueryParameter('query_by', searchConfig.queryBy.join(',')); // Now includes 'embedding'
       helper.setQueryParameter('hybrid_search', {
         enabled: true,
         weight: {
@@ -159,8 +158,8 @@ function updateHitsPerPage() {
   const hitsPerPage = calculateHitsPerPage();
   search.setUiState((prevState) => ({
     ...prevState,
-    bills: {
-      ...prevState.bills,
+    bills_federal: { 
+      ...prevState.bills_federal, 
       hitsPerPage: hitsPerPage,
     },
   }));
@@ -335,4 +334,3 @@ document.addEventListener('click', function (e) {
 });
 
 console.log('Search initialized');
-
