@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "instantsearch.js": "^4.74.1",
+    "mkdirp": "^3.0.1",
+    "typesense-instantsearch-adapter": "^2.8.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "dotenv-webpack": "^8.1.0"
+  }
+}
