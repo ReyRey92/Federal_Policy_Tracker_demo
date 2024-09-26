@@ -130,6 +130,16 @@ const customDateRangePicker = instantsearch.connectors.connectRange((renderOptio
         }
       },
     });
+    flatpickr("#date-picker-end", {
+      onChange: (selectedDates) => {
+        if (selectedDates[0]) {
+          refine([
+            currentRefinement ? currentRefinement.min : undefined,
+            Math.floor(selectedDates[0].getTime() / 1000),
+          ]);
+        }
+      },
+    });
   }
 
   // Update the inputs if the refinement changes
