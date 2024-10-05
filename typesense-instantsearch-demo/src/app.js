@@ -194,30 +194,31 @@ search.addWidgets([
 
         // Color mapping for themes
         const themeColors = {
-          "Algorithmic Fairness and Accountability": { bg: "#e57373", text: "#ffffff" }, // Light red with white text
-          "Artificial Intelligence and Machine Learning": { bg: "#64b5f6", text: "#ffffff" }, // Light blue with white text
-          "Children": { bg: "#ffcc80", text: "#000000" }, // Light orange with black text
-          "Cybersecurity and Information Security": { bg: "#9575cd", text: "#ffffff" }, // Purple with white text
-          "Data Management and Analytics": { bg: "#4db6ac", text: "#000000" }, // Teal with black text
-          "Data Privacy and Protection": { bg: "#ff8a65", text: "#ffffff" }, // Orange with white text
-          "Design & Testing Standards": { bg: "#81c784", text: "#000000" }, // Green with black text
-          "Digital Economy and Fintech": { bg: "#ffb74d", text: "#000000" }, // Orange with black text
-          "Digital Identity and Biometrics": { bg: "#4fc3f7", text: "#000000" }, // Light blue with black text
-          "Digital Platforms and Social Media": { bg: "#e57373", text: "#ffffff" }, // Red with white text
-          "Digital Rights and Ethics": { bg: "#f06292", text: "#ffffff" }, // Pink with white text
-          "Economic Policy": { bg: "#64b5f6", text: "#ffffff" }, // Blue with white text
-          "Emerging Industry Concepts": { bg: "#81c784", text: "#000000" }, // Green with black text
-          "Emerging Technologies": { bg: "#f06292", text: "#ffffff" }, // Pink with white text
-          "Employment and Labor": { bg: "#aed581", text: "#000000" }, // Light green with black text
-          "Legal": { bg: "#ba68c8", text: "#ffffff" }, // Purple with white text
+          "Algorithmic Fairness and Accountability": { bg: "#ff6f61", text: "#ffffff" }, // Coral with white text
+          "Artificial Intelligence and Machine Learning": { bg: "#42a5f5", text: "#ffffff" }, // Light blue with white text
+          "Children": { bg: "#ffd54f", text: "#000000" }, // Yellow with black text
+          "Cybersecurity and Information Security": { bg: "#7e57c2", text: "#ffffff" }, // Deep purple with white text
+          "Data Management and Analytics": { bg: "#26a69a", text: "#000000" }, // Teal with black text
+          "Data Privacy and Protection": { bg: "#ff7043", text: "#ffffff" }, // Deep orange with white text
+          "Design & Testing Standards": { bg: "#66bb6a", text: "#000000" }, // Medium green with black text
+          "Digital Economy and Fintech": { bg: "#ffa726", text: "#000000" }, // Deep orange with black text
+          "Digital Identity and Biometrics": { bg: "#29b6f6", text: "#000000" }, // Sky blue with black text
+          "Digital Platforms and Social Media": { bg: "#ec407a", text: "#ffffff" }, // Pink with white text
+          "Digital Rights and Ethics": { bg: "#ab47bc", text: "#ffffff" }, // Deep purple with white text
+          "Economic Policy": { bg: "#5c6bc0", text: "#ffffff" }, // Indigo with white text
+          "Emerging Industry Concepts": { bg: "#9ccc65", text: "#000000" }, // Light green with black text
+          "Emerging Technologies": { bg: "#ef5350", text: "#ffffff" }, // Red with white text
+          "Employment and Labor": { bg: "#8bc34a", text: "#000000" }, // Light green with black text
+          "Government Spending": { bg: "#ce93d8", text: "#ffffff" }, // Light purple with white text
+          "Legal": { bg: "#b39ddb", text: "#ffffff" }, // Lighter purple with white text
           "Liability": { bg: "#4db6ac", text: "#000000" }, // Teal with black text
           "Misinformation and Deceptive Practices": { bg: "#ff8a65", text: "#ffffff" }, // Orange with white text
-          "Network and Internet Infrastructure": { bg: "#81c784", text: "#000000" }, // Green with black text
-          "Online Safety and Content Regulation": { bg: "#a1887f", text: "#ffffff" }, // Brown with white text
-          "Privacy-Invasive Technologies": { bg: "#64b5f6", text: "#ffffff" }, // Blue with white text
-          "Public health": { bg: "#81c784", text: "#000000" }, // Green with black text
+          "Network and Internet Infrastructure": { bg: "#81c784", text: "#000000" }, // Medium green with black text
+          "Online Safety and Content Regulation": { bg: "#bcaaa4", text: "#ffffff" }, // Brown with white text
+          "Public Health": { bg: "#aed581", text: "#000000" }, // Light green with black text
           "Software and Device Security": { bg: "#9575cd", text: "#ffffff" }, // Purple with white text
-          "Transparency": { bg: "#ffb74d", text: "#000000" } // Orange with black text
+          "Technology and Democracy": { bg: "#ffb74d", text: "#000000" }, // Orange with black text
+          "Transparency": { bg: "#ffe082", text: "#000000" }  // Light yellow with black text
         };
     
         // Generate lozenge HTML with dynamic colors and text color based on background contrast
